@@ -68,8 +68,9 @@ namespace Warp.Tools
 
         // extern TF_Session * TF_LoadSessionFromSavedModel (const TF_SessionOptions *session_options, const TF_Buffer *run_options, const char *export_dir, const char *const *tags, int tags_len, TF_Graph *graph, TF_Buffer *meta_graph_def, TF_Status *status);
         [DllImport(NativeBinding.TensorFlowLibrary)]
-        static extern unsafe TF_Session TF_LoadSessionFromSavedModelOnDevice(TF_SessionOptions session_options, LLBuffer* run_options, string export_dir, string[] tags, int tags_len, TF_Graph graph, string device, TF_Status status);
-
+        //static extern unsafe TF_Session TF_LoadSessionFromSavedModelOnDevice(TF_SessionOptions session_options, LLBuffer* run_options, string export_dir, string[] tags, int tags_len, TF_Graph graph, string device, TF_Status status);
+        static extern unsafe TF_Session TF_LoadSessionFromSavedModel(TF_SessionOptions session_options, LLBuffer* run_options, string export_dir, string[] tags, int tags_len, TF_Graph graph, LLBuffer* meta_graph_def, TF_Status status);
+        
         /// <summary>
         /// Creates a session and graph from a saved session model
         /// </summary>
@@ -94,9 +95,27 @@ namespace Warp.Tools
             if (exportDir == null)
                 throw new ArgumentNullException(nameof(exportDir));
             var cstatus = TFStatus.Setup(status);
+            //var cstatus = new TFStatus();
             unsafe
             {
-                var h = TF_LoadSessionFromSavedModelOnDevice(sessionOptions.handle, runOptions == null ? null : runOptions.LLBuffer, exportDir, tags, tags.Length, graph.handle, device, cstatus.handle);
+                //var h = TF_LoadSessionFromSavedModelOnDevice(sessionOptions.handle, runOptions == null ? null : runOptions.LLBuffer, exportDir, tags, tags.Length, graph.handle, device, cstatus.handle);
+                //var h = TF_LoadSessionFromSavedModel(sessionOptions.handle, runOptions == null ? null : runOptions.LLBuffer, exportDir, tags, tags.Length, graph.handle, null, cstatus.handle);
+                Console.WriteLine("---- DEBUG ------");
+                Console.WriteLine(sessionOptions.handle);
+                Console.WriteLine(runOptions);
+                Console.WriteLine(exportDir);
+                Console.WriteLine(tags[0]);
+                Console.WriteLine(tags.Length);
+                Console.WriteLine(graph.handle);
+                Console.WriteLine(cstatus.handle);
+                Console.WriteLine("---- DEBUG END------");
+                var h = TF_LoadSessionFromSavedModel(sessionOptions.handle, runOptions == null ? null : runOptions.LLBuffer, exportDir, tags, tags.Length, graph.handle, null, cstatus.handle);
+
+                // TFSessionOptions SessionOptions = TFHelper.CreateOptions();
+                // TFSession Dummy = new TFSession(new TFGraph(), SessionOptions);
+
+                // Session = TFHelper.FromSavedModel(SessionOptions, null, ModelDir, new[] { forTraining ? "train" : "serve" }, new TFGraph(), $"/device:GPU:{deviceID}");
+                Console.WriteLine("---- DEBUG END2------");
 
                 if (cstatus.CheckMaybeRaise(status))
                 {

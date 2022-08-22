@@ -358,7 +358,11 @@ __declspec(dllexport) void ProjectForward3DShiftedTex(uint64_t t_inputRe, uint64
 
 __declspec(dllexport) void ProjectBackward(float2* d_volumeft, float* d_volumeweights, int3 dimsvolume, float2* d_projft, float* d_projweights, int2 dimsproj, int rmax, float3* h_angles, int* h_ivolume, float3 magnification, float ewaldradius, float supersample, bool outputdecentered, uint batch)
 {
-    d_rlnBackproject(d_volumeft, d_volumeweights, dimsvolume, d_projft, d_projweights, toInt3(dimsproj), rmax, (tfloat3*)h_angles, h_ivolume, magnification, ewaldradius, supersample, outputdecentered, batch);
+	printf("Warning or ERRORERRORERRORERRORERRORERRORERRORERRORERRORERRORERRORERRORERROR from d_rlnBackproject\n");
+    d_rlnBackproject((gtom::tcomplex*)d_volumeft, (gtom::tfloat*)d_volumeweights, dimsvolume, (gtom::tcomplex*)d_projft, (gtom::tfloat*)d_projweights, toInt3(dimsproj), rmax, (tfloat3*)h_angles, h_ivolume, {magnification.x, magnification.y, magnification.z, 1.0} , ewaldradius, supersample, outputdecentered, false, batch);
+
+    //../../gtom/include/Relion.cuh:	void d_rlnBackproject(tcomplex* d_volumeft, tfloat* d_volumeweights, int3 dimsvolume, tcomplex* d_projft, tfloat* d_projweights, int3 dimsproj, uint rmax, tfloat3* h_angles, int* h_ivolume, float4 magnification, float ewaldradius, float supersample, bool outputdecentered, bool squareinterpweights, uint batch);
+    //                                                       (float2 *,              float *,                int3,            float2 *,            float *,              int3,          int,       gtom::tfloat3 *,   int *,          float3,               float,             float,            __nv_bool, __nv_bool, uint)
 }
 
 __declspec(dllexport) void ProjectBackwardShifted(float2* d_volumeft, float* d_volumeweights, int3 dimsvolume, float2* d_projft, float* d_projweights, int2 dimsproj, int rmax, float3* h_angles, float3* h_shifts, float* h_globalweights, float supersample, uint batch)

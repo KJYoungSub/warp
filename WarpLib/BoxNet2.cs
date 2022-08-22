@@ -45,6 +45,22 @@ namespace Warp
 
         private bool IsDisposed = false;
 
+        public static TFSessionOptions CreateOptions()
+        {
+            TFSessionOptions Options = new TFSessionOptions();
+            
+            byte[] Serialized = { 0x32, 0x2, 0x20, 0x1, 0x38, 0x1 };
+
+            TFStatus Stat = new TFStatus();
+            unsafe
+            {
+                fixed (byte* SerializedPtr = Serialized)
+                    Options.SetConfig(new IntPtr(SerializedPtr), Serialized.Length, Stat);
+            }
+
+            return Options;
+        }
+
         public BoxNet2(string modelDir, int deviceID = 0, int nThreads = 1, int batchSize = 1, bool forTraining = false)
         {
             lock (TFHelper.DeviceSync[deviceID])
@@ -55,10 +71,11 @@ namespace Warp
                 MaxThreads = nThreads;
                 BatchSize = batchSize;
 
-                TFSessionOptions SessionOptions = TFHelper.CreateOptions();
+                TFSessionOptions SessionOptions = CreateOptions();
                 TFSession Dummy = new TFSession(new TFGraph(), SessionOptions);
 
-                Session = TFHelper.FromSavedModel(SessionOptions, null, ModelDir, new[] { forTraining ? "train" : "serve" }, new TFGraph(), $"/device:GPU:{deviceID}");
+                // Session = TFHelper.FromSavedModel(SessionOptions, null, ModelDir, new[] { forTraining ? "train" : "serve" }, new TFGraph(), $"/device:GPU:{deviceID}");
+                Session = TFHelper.FromSavedModel(SessionOptions, null, "/home/kimv/warpPort/dlls/runtime/boxnet2models/GoldNet", new[] { "serve" }, new TFGraph(), $"/device:GPU:0");
                 Graph = Session.Graph;
 
                 if (forTraining)

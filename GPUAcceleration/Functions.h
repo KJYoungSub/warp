@@ -1,6 +1,10 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#define dllexport
+#define __declspec(x)
+#define __stdcall
+
 #include "../../gtom/include/GTOM.cuh"
 
 using namespace std;
