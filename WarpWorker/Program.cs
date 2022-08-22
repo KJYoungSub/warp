@@ -40,7 +40,7 @@ namespace WarpWorker
         static string OriginalStackOwner = "";
         static Image OriginalStack = null;
 
-        static Population MPAPopulation = null;
+        // static Population MPAPopulation = null;
 
         static List<int[]> Dummies = new List<int[]>();
 
@@ -241,67 +241,70 @@ namespace WarpWorker
                     }
                     else if (Command.Name == "MPAPreparePopulation")
                     {
-                        string Path = (string)Command.Content[0];
+                        Console.WriteLine("Not implemented.");
+                        // string Path = (string)Command.Content[0];
 
-                        MPAPopulation = new Population(Path);
+                        // MPAPopulation = new Population(Path);
 
-                        foreach (var species in MPAPopulation.Species)
-                        {
-                            Console.Write($"Preparing {species.Name} for refinement... ");
+                        // foreach (var species in MPAPopulation.Species)
+                        // {
+                        //     Console.Write($"Preparing {species.Name} for refinement... ");
 
-                            species.PrepareRefinementRequisites(true, DeviceID);
+                        //     species.PrepareRefinementRequisites(true, DeviceID);
 
-                            Console.WriteLine("Done.");
-                        }
+                        //     Console.WriteLine("Done.");
+                        // }
                     }
                     else if (Command.Name == "MPARefine")
                     {
-                        string Path = (string)Command.Content[0];
-                        string WorkingDirectory = (string)Command.Content[1];
-                        string LogPath = (string)Command.Content[2];
-                        ProcessingOptionsMPARefine Options = (ProcessingOptionsMPARefine)Command.Content[3];
-                        DataSource Source = (DataSource)Command.Content[4];
+                        Console.WriteLine("Not implemented.");
+                        // string Path = (string)Command.Content[0];
+                        // string WorkingDirectory = (string)Command.Content[1];
+                        // string LogPath = (string)Command.Content[2];
+                        // ProcessingOptionsMPARefine Options = (ProcessingOptionsMPARefine)Command.Content[3];
+                        // DataSource Source = (DataSource)Command.Content[4];
 
-                        Movie Item = null;
+                        // Movie Item = null;
 
-                        if (Helper.PathToExtension(Path).ToLower() == ".tomostar")
-                            Item = new TiltSeries(Path);
-                        else
-                            Item = new Movie(Path);
+                        // if (Helper.PathToExtension(Path).ToLower() == ".tomostar")
+                        //     Item = new TiltSeries(Path);
+                        // else
+                        //     Item = new Movie(Path);
 
-                        GPU.SetDevice(DeviceID);
+                        // GPU.SetDevice(DeviceID);
 
-                        Item.PerformMultiParticleRefinement(WorkingDirectory, Options, MPAPopulation.Species.ToArray(), Source, GainRef, DefectMap, (message) =>
-                        {
-                            Console.WriteLine(message);
+                        // Item.PerformMultiParticleRefinement(WorkingDirectory, Options, MPAPopulation.Species.ToArray(), Source, GainRef, DefectMap, (message) =>
+                        // {
+                        //     Console.WriteLine(message);
 
-                            bool Success = false;
-                            int Tries = 0;
-                            while (!Success && Tries < 10)
-                                try
-                                {
-                                    using (TextWriter Writer = File.AppendText(LogPath))
-                                        Writer.WriteLine(message);
-                                    Success = true;
-                                }
-                                catch
-                                {
-                                    Thread.Sleep(100);
-                                    Tries++;
-                                }
-                        });
+                        //     bool Success = false;
+                        //     int Tries = 0;
+                        //     while (!Success && Tries < 10)
+                        //         try
+                        //         {
+                        //             using (TextWriter Writer = File.AppendText(LogPath))
+                        //                 Writer.WriteLine(message);
+                        //             Success = true;
+                        //         }
+                        //         catch
+                        //         {
+                        //             Thread.Sleep(100);
+                        //             Tries++;
+                        //         }
+                        // });
 
-                        Item.SaveMeta();
+                        // Item.SaveMeta();
 
-                        GPU.CheckGPUExceptions();
+                        // GPU.CheckGPUExceptions();
 
-                        Console.WriteLine($"Finished refining {Item.Name}");
+                        // Console.WriteLine($"Finished refining {Item.Name}");
                     }
                     else if (Command.Name == "MPASaveProgress")
                     {
-                        string Path = (string)Command.Content[0];
+                        Console.WriteLine("Not implemented.");
+                        // string Path = (string)Command.Content[0];
 
-                        MPAPopulation.SaveRefinementProgress(Path);
+                        // MPAPopulation.SaveRefinementProgress(Path);
                     }
                     else if (Command.Name == "TryAllocatePinnedMemory")
                     {

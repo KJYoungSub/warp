@@ -49,6 +49,7 @@ namespace Warp
 
             Formatter = new BinaryFormatter();
 
+            Console.WriteLine("Hi : " + Path.Combine(Helper.PathToFolder(System.Reflection.Assembly.GetEntryAssembly().Location), "WarpWorker.exe"));
             Worker = new Process
             {
                 StartInfo =

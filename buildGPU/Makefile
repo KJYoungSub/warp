@@ -1,6 +1,6 @@
 PROGRAM = GPUAcceleration.dll
 NVCC = nvcc
-NVCCFLAGS = --compiler-options "-fPIC -std=c++11 -mavx -march=native" -I/cdata/liblion -I../GPUAcceleration/include -I../GPUAcceleration/einspline 
+NVCCFLAGS = --compiler-options "-fPIC -std=c++11 -mavx -march=native" -I../../liblion -I../GPUAcceleration/include -I../GPUAcceleration/einspline -lcufft 
 
 OBJS = ../GPUAcceleration/Angles.o ../GPUAcceleration/Comparison.o ../GPUAcceleration/Device.o ../GPUAcceleration/ParticleCTF.o \
 	../GPUAcceleration/Polishing.o ../GPUAcceleration/SparseEigen.o ../GPUAcceleration/Backprojection.o \

@@ -45,22 +45,6 @@ namespace Warp
 
         private bool IsDisposed = false;
 
-        public static TFSessionOptions CreateOptions()
-        {
-            TFSessionOptions Options = new TFSessionOptions();
-            
-            byte[] Serialized = { 0x32, 0x2, 0x20, 0x1, 0x38, 0x1 };
-
-            TFStatus Stat = new TFStatus();
-            unsafe
-            {
-                fixed (byte* SerializedPtr = Serialized)
-                    Options.SetConfig(new IntPtr(SerializedPtr), Serialized.Length, Stat);
-            }
-
-            return Options;
-        }
-
         public BoxNet2(string modelDir, int deviceID = 0, int nThreads = 1, int batchSize = 1, bool forTraining = false)
         {
             lock (TFHelper.DeviceSync[deviceID])
@@ -71,11 +55,11 @@ namespace Warp
                 MaxThreads = nThreads;
                 BatchSize = batchSize;
 
-                TFSessionOptions SessionOptions = CreateOptions();
+                TFSessionOptions SessionOptions = TFHelper.CreateOptions();
                 TFSession Dummy = new TFSession(new TFGraph(), SessionOptions);
 
-                // Session = TFHelper.FromSavedModel(SessionOptions, null, ModelDir, new[] { forTraining ? "train" : "serve" }, new TFGraph(), $"/device:GPU:{deviceID}");
-                Session = TFHelper.FromSavedModel(SessionOptions, null, "/home/kimv/warpPort/dlls/runtime/boxnet2models/GoldNet", new[] { "serve" }, new TFGraph(), $"/device:GPU:0");
+                Console.WriteLine($"/device:GPU:{deviceID}");
+                Session = TFHelper.FromSavedModel(SessionOptions, null, ModelDir, new[] { forTraining ? "train" : "serve" }, new TFGraph(), $"/device:GPU:{deviceID}");
                 Graph = Session.Graph;
 
                 if (forTraining)
@@ -162,11 +146,10 @@ namespace Warp
             // Run prediction or training for one batch to claim all the memory needed
             long[] InitArgMax;
             float[] InitProb;
-            if (!ForTraining)
-                Predict(new float[BoxDimensionsPredict.Elements() * BatchSize],
-                        0,
-                        out InitArgMax,
-                        out InitProb);
+            if (!ForTraining){
+                Console.WriteLine("PREDICT : " + BoxDimensionsPredict.Elements() * BatchSize);
+                // Predict(new float[BoxDimensionsPredict.Elements() * BatchSize], 0, out InitArgMax, out InitProb);
+            }
             if (ForTraining)
             {
                 RandomNormal RandN = new RandomNormal();
@@ -188,6 +171,7 @@ namespace Warp
             lock (TFHelper.DeviceSync[DeviceID])
             {
                 Marshal.Copy(data, 0, TensorMicTilePredict[threadID].Data, BatchSize * (int)BoxDimensionsPredict.Elements());
+                // GPU.CopyDeviceToHostPinned(data, TensorMicTilePredict[threadID].Data, BatchSize * (int)BoxDimensionsPredict.Elements());
                 var Output = RunnerPrediction[threadID].Run();
 
                 Marshal.Copy(Output[0].Data, ResultArgMax[threadID], 0, BatchSize * (int)BoxDimensionsPredict.Elements());
