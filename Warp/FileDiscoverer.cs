@@ -50,9 +50,6 @@ namespace Warp
         {
             IncubationEnded?.Invoke();
 
-            //if (newExtension == "*.tif")
-            //    newExtension = "*.tif*";
-
             lock (Incubator)
             {
                 if (DiscoveryThread != null && DiscoveryThread.IsBusy)

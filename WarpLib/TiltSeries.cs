@@ -23,19 +23,19 @@ namespace Warp
     {
         #region Directories
 
-        public string ReconstructionDir => DirectoryName + "reconstruction\\";
+        public string ReconstructionDir => DirectoryName + "reconstruction/";
 
-        public string ReconstructionDeconvDir => ReconstructionDir + "deconv\\";
+        public string ReconstructionDeconvDir => ReconstructionDir + "deconv/";
 
-        public string ReconstructionOddDir => ReconstructionDir + "odd\\";
+        public string ReconstructionOddDir => ReconstructionDir + "odd/";
 
-        public string ReconstructionEvenDir => ReconstructionDir + "even\\";
+        public string ReconstructionEvenDir => ReconstructionDir + "even/";
 
-        public string SubtomoDir => DirectoryName + "subtomo\\" + RootName + "\\";
+        public string SubtomoDir => DirectoryName + "subtomo/" + RootName + "/";
 
-        public string ParticleSeriesDir => DirectoryName + "particleseries\\" + RootName + "\\";
+        public string ParticleSeriesDir => DirectoryName + "particleseries/" + RootName + "/";
 
-        public string WeightOptimizationDir => DirectoryName + "weightoptimization\\";
+        public string WeightOptimizationDir => DirectoryName + "weightoptimization/";
 
         #endregion
 
