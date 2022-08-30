@@ -21,8 +21,10 @@ namespace Warp
                     ReadTIFF(path, layer, flipy, h_result);
                     return;
                 }
-                catch
-                {
+                catch(Exception exc)
+                {   
+                    if(a+1 == attempts)
+                        Console.WriteLine(exc.Message);
                     Thread.Sleep(mswait);
                 }
             }

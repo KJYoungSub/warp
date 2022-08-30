@@ -1697,6 +1697,8 @@ namespace Warp
             Image[] TiltMasks;
             LoadMovieData(options, true, out TiltMovies, out TiltData);
             LoadMovieMasks(options, out TiltMasks);
+
+            Console.WriteLine("-LoadMovieData, LoadMovieMasks was done.");
             for (int z = 0; z < NTilts; z++)
             {
                 EraseDirt(TiltData[z], TiltMasks[z]);
@@ -7568,6 +7570,7 @@ namespace Warp
         static Image[][] ScaledMaskBuffers = new Image[GPU.GetDeviceCount()][];
         public void LoadMovieMasks(ProcessingOptionsBase options, out Image[] maskData)
         {
+            Console.WriteLine($"-LoadMovieMasks : {DirectoryName}{TiltMoviePaths[0]}");
             MapHeader Header = MapHeader.ReadFromFile(DirectoryName + TiltMoviePaths[0]);
 
             int2 DimsScaled = new int2((int)Math.Round(Header.Dimensions.X / (float)options.DownsampleFactor / 2) * 2,
@@ -7609,8 +7612,8 @@ namespace Warp
                         RawMaskBuffers[CurrentDevice] = new Image(MaskHeader.Dimensions);
                     }
 
-
-                    TiffNative.ReadTIFFPatient(50, 500, MaskPath, 0, true, RawMaskBuffers[CurrentDevice].GetHost(Intent.Write)[0]);
+                    // 50, 500.
+                    TiffNative.ReadTIFFPatient(50, 600, MaskPath, 0, true, RawMaskBuffers[CurrentDevice].GetHost(Intent.Write)[0]);
 
                     #region Rescale
 

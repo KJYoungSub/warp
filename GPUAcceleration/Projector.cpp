@@ -12,6 +12,7 @@ __declspec(dllexport) void __stdcall InitProjector(int3 dims, int oversampling, 
         vol.data[i] = h_data[i];
 
     relion::Projector projector(dims.x, TRILINEAR, oversampling, 10, projdim);
+    //projector.computeFourierTransformMap((relion::MultidimArray<double>&)vol, (relion::MultidimArray<double>&)dummy, -1, 1, true, false, false);
     projector.computeFourierTransformMap(vol, dummy, -1, 1, true, false, false);
 
     int3 projectordims = toInt3(XSIZE(projector.data), YSIZE(projector.data), ZSIZE(projector.data));
@@ -67,6 +68,7 @@ __declspec(dllexport) void __stdcall BackprojectorReconstruct(int3 dimsori, int 
     relion::MultidimArray<float> fsc;
     fsc.resize(dimsori.x / 2 + 1);
 
+    // backprojector.reconstruct((relion::MultidimArray<double>&)vol, 10, false, 1., (relion::MultidimArray<double>&)dummy, (relion::MultidimArray<double>&)dummy, (relion::MultidimArray<double>&)dummy, (relion::MultidimArray<double>&)fsc, 1., false, true, 16, -1);
     backprojector.reconstruct(vol, 10, false, 1., dummy, dummy, dummy, fsc, 1., false, true, 16, -1);
 
     if (do_reconstruct_ctf)
