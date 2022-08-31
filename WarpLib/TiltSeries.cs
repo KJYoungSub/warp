@@ -1686,7 +1686,7 @@ namespace Warp
                                                   y * SizeSub + SizeSub / 2,
                                                   z * SizeSub + SizeSub / 2));
 
-            progressCallback?.Invoke(Grid, 0, "Loading...");
+            // progressCallback?.Invoke(Grid, 0, "Loading...");
 
             #endregion
 
@@ -1764,8 +1764,8 @@ namespace Warp
                 threadID => GPU.SetDevice(GPUID),
                 (p, threadID) =>
                 {
-                    if (IsCanceled)
-                        return;
+                    // if (IsCanceled)
+                    //     return;
 
                     float3 CoordsPhysical = GridCoords[p] * (float)options.BinnedPixelSizeMean;
 
@@ -1815,6 +1815,7 @@ namespace Warp
                                 }
                             }
                         }
+                        // Console.WriteLine("Reconstruction Done in Tiltseries.cs");
                     }
 
                     #endregion
@@ -1876,9 +1877,9 @@ namespace Warp
 
                     #endregion
 
-                    lock (OutputRec)
-                        if (progressCallback != null)
-                            IsCanceled = progressCallback(Grid, ++NDone, "Reconstructing...");
+                    // lock (OutputRec)
+                    //     if (progressCallback != null)
+                    //         IsCanceled = progressCallback(Grid, ++NDone, "Reconstructing...");
                 }, null);
 
             #region Teardown
@@ -1915,7 +1916,7 @@ namespace Warp
 
             if (options.DoDeconv)
             {
-                IsCanceled = progressCallback(Grid, (int)Grid.Elements(), "Deconvolving...");
+                // IsCanceled = progressCallback(Grid, (int)Grid.Elements(), "Deconvolving...");
 
                 {
                     Image FullRec = new Image(OutputRec, DimsVolumeCropped);
@@ -1974,7 +1975,7 @@ namespace Warp
 
             if (options.KeepOnlyFullVoxels)
             {
-                IsCanceled = progressCallback(Grid, (int)Grid.Elements(), "Trimming...");
+                // IsCanceled = progressCallback(Grid, (int)Grid.Elements(), "Trimming...");
 
                 float BinnedAngPix = (float)options.BinnedPixelSizeMean;
 
@@ -2011,8 +2012,9 @@ namespace Warp
 
             #endregion
 
-            IsCanceled = progressCallback(Grid, (int)Grid.Elements(), "Writing...");
-
+            // IsCanceled = progressCallback(Grid, (int)Grid.Elements(), "Writing...");
+            Console.WriteLine($"Writing.... {(float)options.BinnedPixelSizeMean}px");
+            
             Image OutputRecImage = new Image(OutputRec, DimsVolumeCropped);
             OutputRecImage.WriteMRC(ReconstructionDir + NameWithRes + ".mrc", (float)options.BinnedPixelSizeMean, true);
             OutputRecImage.Dispose();
@@ -2035,7 +2037,7 @@ namespace Warp
                 OutputRecEvenImage.Dispose();
             }
 
-            IsCanceled = progressCallback(Grid, (int)Grid.Elements(), "Done.");
+            // IsCanceled = progressCallback(Grid, (int)Grid.Elements(), "Done.");
         }
 
         public void ReconstructSubtomos(ProcessingOptionsTomoSubReconstruction options, float3[] positions, float3[] angles)
@@ -7570,7 +7572,8 @@ namespace Warp
         static Image[][] ScaledMaskBuffers = new Image[GPU.GetDeviceCount()][];
         public void LoadMovieMasks(ProcessingOptionsBase options, out Image[] maskData)
         {
-            Console.WriteLine($"-LoadMovieMasks : {DirectoryName}{TiltMoviePaths[0]}");
+            Console.WriteLine($"-First Loaded MovieMasks : {DirectoryName}{TiltMoviePaths[0]}, ");
+            Console.WriteLine($"-# LoadedMovieMasks : {TiltMoviePaths.Length}");
             MapHeader Header = MapHeader.ReadFromFile(DirectoryName + TiltMoviePaths[0]);
 
             int2 DimsScaled = new int2((int)Math.Round(Header.Dimensions.X / (float)options.DownsampleFactor / 2) * 2,
@@ -7613,7 +7616,7 @@ namespace Warp
                     }
 
                     // 50, 500.
-                    TiffNative.ReadTIFFPatient(50, 600, MaskPath, 0, true, RawMaskBuffers[CurrentDevice].GetHost(Intent.Write)[0]);
+                    TiffNative.ReadTIFFPatient(50, 500, MaskPath, 0, true, RawMaskBuffers[CurrentDevice].GetHost(Intent.Write)[0]);
 
                     #region Rescale
 

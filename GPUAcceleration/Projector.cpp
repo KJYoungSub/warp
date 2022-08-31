@@ -4,8 +4,8 @@ using namespace gtom;
 
 __declspec(dllexport) void __stdcall InitProjector(int3 dims, int oversampling, float* h_data, float* h_initialized, int projdim)
 {
-    relion::MultidimArray<float> dummy;
-    relion::MultidimArray<float> vol;
+    relion::MultidimArray<double> dummy;
+    relion::MultidimArray<double> vol;
     vol.initZeros(dims.z, dims.y, dims.x);
 
     for (uint i = 0; i < Elements(dims); i++)
@@ -63,9 +63,9 @@ __declspec(dllexport) void __stdcall BackprojectorReconstruct(int3 dimsori, int 
     //memcpy(backprojector.data.data, h_data, Elements(projectordims) * sizeof(float2));
     //memcpy(backprojector.weight.data, h_weights, Elements(projectordims) * sizeof(float));
 
-    relion::MultidimArray<float> vol, dummy;
+    relion::MultidimArray<double> vol, dummy;
     relion::MultidimArray<relion::Complex > F2D;
-    relion::MultidimArray<float> fsc;
+    relion::MultidimArray<double> fsc;
     fsc.resize(dimsori.x / 2 + 1);
 
     // backprojector.reconstruct((relion::MultidimArray<double>&)vol, 10, false, 1., (relion::MultidimArray<double>&)dummy, (relion::MultidimArray<double>&)dummy, (relion::MultidimArray<double>&)dummy, (relion::MultidimArray<double>&)fsc, 1., false, true, 16, -1);
